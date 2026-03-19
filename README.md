@@ -44,60 +44,48 @@ A **results-based fallback** runs the Web Docs agent when the Paper agent has no
 ## Architecture Overview
 
 ```mermaid
-flowchart TB
-    A[User Query] --> P[Preprocessor] --> R[Intent Router]
+flowchart TD
+    Q[Query] --> P[Preprocessor]
+    P --> C[Classify intent]
 
-    %% Intent row
-    IA[academic]
-    IP[practical/general]
-    IC[contextual]
-    IV[comparative]
+    subgraph Intent_layer
+        I1[academic]
+        I2[practical, general]
+        I3[contextual]
+        I4[comparative]
+    end
 
-    R --> IA
-    R --> IP
-    R --> IC
-    R --> IV
+    C --> I1
+    C --> I2
+    C --> I3
+    C --> I4
 
-    %% Agent row (single-source agents aligned)
-    PA[Paper Agent]
-    WA[Web Docs Agent]
-    NA[Notes Agent]
-    PL[Planner]
-    PP[Planned agents - parallel]
+    subgraph Agent_layer
+        A1[paper]
+        A2[web_docs]
+        A3[notes]
+        A4[paper + web_docs (+ notes optional)]
+    end
 
-    IA --> PA
-    IP --> WA
-    IC --> NA
-    IV --> PL --> PP
+    I1 --> A1
+    I2 --> A2
+    I3 --> A3
+    I4 --> A4
 
-    %% Fallback + synthesis
-    PA -->|paper strong| S[Response Synthesizer]
-    PA -->|fallback weak paper retrieval| WA
-    WA --> S
-    NA --> S
-    PP --> S
+    A1 --> S[Synthesizer]
+    A2 --> S
+    A3 --> S
+    A4 --> S
 
-    S --> O[Final answer + citations + route trace]
+    S --> F[Final answer + citations]
 
-    %% Data sources
-    AX[arXiv.org]
-    TV[Tavily / Web]
-    LN[Local notes]
+    classDef core fill:#e8f5e9,stroke:#2e7d32,stroke-width:1.5px,color:#1b5e20;
+    classDef neutral fill:#f5f5f5,stroke:#9e9e9e,stroke-width:1px,color:#333;
+    classDef group fill:#fafafa,stroke:#bdbdbd,stroke-width:1px,color:#555;
 
-    PA --> AX
-    WA --> TV
-    NA --> LN
-
-    %% Styling
-    classDef intent fill:#f5f7ff,stroke:#6b8cff,stroke-width:1px,color:#1f2a44;
-    classDef agent fill:#eef4ff,stroke:#5578d9,stroke-width:1px,color:#1f2a44;
-    classDef source fill:#eefaf1,stroke:#5ea86c,stroke-width:1px,color:#1f3b2a;
-    classDef output fill:#fff6e8,stroke:#d59b3d,stroke-width:1px,color:#4a3412;
-
-    class IA,IP,IC,IV intent;
-    class PA,WA,NA,PL,PP,S agent;
-    class AX,TV,LN source;
-    class O output;
+    class Q,P,C,S,F core;
+    class I1,I2,I3,I4,A1,A2,A3,A4 neutral;
+    class Intent_layer,Agent_layer group;
 
 ```
 
