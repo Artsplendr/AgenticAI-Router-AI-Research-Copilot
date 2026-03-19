@@ -42,17 +42,16 @@ A **results-based fallback** runs the Web Docs agent when the Paper agent has no
 ---
 
 ## Architecture Overview
-
 ```mermaid
 flowchart TD
-    Q["Query"] --> P["Preprocessor"]
-    P --> C["Classify intent"]
+    Q[Query] --> P[Preprocessor]
+    P --> C[Classify intent]
 
     subgraph Intent_layer
-        I1["academic"]
-        I2["practical, general"]
-        I3["contextual"]
-        I4["comparative"]
+        I1[academic]
+        I2[practical_general]
+        I3[contextual]
+        I4[comparative]
     end
 
     C --> I1
@@ -61,10 +60,10 @@ flowchart TD
     C --> I4
 
     subgraph Agent_layer
-        A1["paper"]
-        A2["web_docs"]
-        A3["notes"]
-        A4["paper + web_docs ; notes optional"]
+        A1[paper]
+        A2[web_docs]
+        A3[notes]
+        A4[planned_agents]
     end
 
     I1 --> A1
@@ -72,20 +71,12 @@ flowchart TD
     I3 --> A3
     I4 --> A4
 
-    A1 --> S["Synthesizer"]
+    A1 --> S[Synthesizer]
     A2 --> S
     A3 --> S
     A4 --> S
 
-    S --> F["Final answer + citations"]
-
-    classDef core fill:#e8f5e9,stroke:#2e7d32,stroke-width:1.5px,color:#1b5e20;
-    classDef neutral fill:#f5f5f5,stroke:#9e9e9e,stroke-width:1px,color:#333;
-    classDef group fill:#fafafa,stroke:#bdbdbd,stroke-width:1px,color:#555;
-
-    class Q,P,C,S,F core;
-    class I1,I2,I3,I4,A1,A2,A3,A4 neutral;
-
+    S --> F[Final answer and citations]
 ```
 
 ## Key Features
