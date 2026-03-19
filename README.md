@@ -63,7 +63,7 @@ flowchart TD
         A1[paper]
         A2[web_docs]
         A3[notes]
-        A4[planned_agents]
+        A4[paper+web_docs+notes]
     end
 
     I1 --> A1
