@@ -44,42 +44,61 @@ A **results-based fallback** runs the Web Docs agent when the Paper agent has no
 ## Architecture Overview
 
 ```mermaid
-flowchart TD
-    A[User Query] --> P[Preprocessor]
-    P --> B[Intent Router]
+flowchart TB
+    A[User Query] --> P[Preprocessor] --> R[Intent Router]
 
-    B -->|academic| C[Paper Agent]
-    B -->|practical, general| D[Web Docs Agent]
-    B -->|contextual| E[Notes Agent]
-    B -->|comparative| PL[Planner]
-    PL --> F[Planned agents - parallel]
+    %% Intent row
+    IA[academic]
+    IP[practical/general]
+    IC[contextual]
+    IV[comparative]
 
-    C -->|paper strong| G[Response Synthesizer]
-    C -->|fallback weak paper retrieval| D
+    R --> IA
+    R --> IP
+    R --> IC
+    R --> IV
 
-    D --> G
-    E --> G
-    F --> G
+    %% Agent row (single-source agents aligned)
+    PA[Paper Agent]
+    WA[Web Docs Agent]
+    NA[Notes Agent]
+    PL[Planner]
+    PP[Planned agents - parallel]
 
-    G --> H[Final answer + citations + route trace]
+    IA --> PA
+    IP --> WA
+    IC --> NA
+    IV --> PL --> PP
 
-    subgraph Data_Sources
-        I[arXiv.org]
-        J[Tavily / Web]
-        K[Local notes]
-    end
+    %% Fallback + synthesis
+    PA -->|paper strong| S[Response Synthesizer]
+    PA -->|fallback weak paper retrieval| WA
+    WA --> S
+    NA --> S
+    PP --> S
 
-    C --> I
-    D --> J
-    E --> K
+    S --> O[Final answer + citations + route trace]
 
-    classDef route fill:#eef4ff,stroke:#6b8cff,stroke-width:1px,color:#1f2a44;
+    %% Data sources
+    AX[arXiv.org]
+    TV[Tavily / Web]
+    LN[Local notes]
+
+    PA --> AX
+    WA --> TV
+    NA --> LN
+
+    %% Styling
+    classDef intent fill:#f5f7ff,stroke:#6b8cff,stroke-width:1px,color:#1f2a44;
+    classDef agent fill:#eef4ff,stroke:#5578d9,stroke-width:1px,color:#1f2a44;
     classDef source fill:#eefaf1,stroke:#5ea86c,stroke-width:1px,color:#1f3b2a;
     classDef output fill:#fff6e8,stroke:#d59b3d,stroke-width:1px,color:#4a3412;
 
-    class A,P,B,PL,F,C,D,E,G route;
-    class I,J,K source;
-    class H output;
+    class IA,IP,IC,IV intent;
+    class PA,WA,NA,PL,PP,S agent;
+    class AX,TV,LN source;
+    class O output;
+
 ```
 
 ## Key Features
