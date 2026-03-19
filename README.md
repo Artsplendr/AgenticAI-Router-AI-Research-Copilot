@@ -165,28 +165,13 @@ Expected notes index path in this project:
 
 To ingest notes:
 1. Add note files (`.md` or `.txt`) to `./data/notes/` (for example `./data/notes/rag_eval.md`).
-2. Build the `notes` index:
+2. Build the `notes` index with the provided script:
    ```bash
-   python - <<'PY'
-   from pathlib import Path
-   from dotenv import load_dotenv
-   from langchain_core.documents import Document
-   from langchain_text_splitters import RecursiveCharacterTextSplitter
-   from tools.vector_store import get_or_create_vector_store, add_documents, save_vector_store
-
-   load_dotenv(".env")
-   notes_dir = Path("data/notes")
-   files = list(notes_dir.glob("*.md")) + list(notes_dir.glob("*.txt"))
-   if not files:
-       raise SystemExit("No note files found in data/notes")
-
-   docs = [Document(page_content=p.read_text(encoding="utf-8"), metadata={"title": p.name, "source": str(p)}) for p in files]
-   chunks = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150).split_documents(docs)
-   store = get_or_create_vector_store("notes")
-   add_documents(store, chunks, "notes")
-   save_vector_store(store, "notes")
-   print(f"Saved notes index with {len(chunks)} chunks")
-   PY
+   python scripts/ingest_notes.py
+   ```
+   Optional custom notes folder:
+   ```bash
+   python scripts/ingest_notes.py "/absolute/path/to/your/notes"
    ```
 
 After this, run the app again and ask a notes-focused query (for example: "What do my notes say about chunking strategies?").
