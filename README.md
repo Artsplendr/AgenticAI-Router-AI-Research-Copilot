@@ -12,13 +12,13 @@ This project is a hands-on implementation of an agentic AI router architecture.
 - **Source-grounded outputs:** final answers are tied to retrieved evidence from paper/web/notes sources, with citations instead of unsupported claims.
 - **Testable orchestration:** the multi-agent workflow is covered by automated checks in CI (`ruff`, `pytest`, router smoke test), not only manual UI testing.
 
-It also includes LangSmith observability and quality-based fallback behavior across agents.
+It also includes LangSmith observability and quality-based fallback from Paper to Web Docs when paper retrieval is weak.”.
 
 ---
 
 ## Overview
 
-The assistant uses **source-aware intents** and a **preprocessor** before routing:
+AI Research Copilot uses **source-aware intents** and a **preprocessor** before routing:
 
 - **academic** → Paper Agent (arXiv-only)
 - **practical** / **general** → Web Docs Agent (Tavily + web)
@@ -76,7 +76,7 @@ flowchart TD
 - Cross-source synthesis
 - Streamlit interactive UI
 - Observability and tracing (LangSmith ready)
-- CI/CD pipeline for automated testing and deployment
+- CI pipeline for automated linting, tests, and smoke checks
 - LLM/MLOps-oriented quality, testing, and monitoring practices
 
 ## Design notes
@@ -99,7 +99,7 @@ flowchart TD
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/ai-research-copilot.git
+   git clone https://github.com/Artsplendr/ai-research-copilot.git
    cd ai-research-copilot
    ```
 
