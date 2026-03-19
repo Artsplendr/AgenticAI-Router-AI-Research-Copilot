@@ -1,6 +1,6 @@
 # AI Research Copilot (Multi-Source Knowledge Router)
 
-[![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/ci.yml)
+[![CI](https://github.com/Artsplendr/AgenticAI-Router-AI-Research-Copilot/actions/workflows/ci.yml/badge.svg)](https://github.com/Artsplendr/AgenticAI-Router-AI-Research-Copilot/actions/workflows/ci.yml)
 
 AI Research Copilot is an agentic AI system that routes user queries to specialized knowledge agents (papers, web docs, notes) based on intent and synthesizes a unified, high-quality response. The system demonstrates a production-ready router architecture using LangGraph orchestration, LangChain components, and multimodal Retrieval-Augmented Generation (RAG).
 
