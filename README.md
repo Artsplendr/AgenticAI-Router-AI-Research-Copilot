@@ -12,7 +12,7 @@ This project is a hands-on implementation of an agentic AI router architecture.
 - **Source-grounded outputs:** final answers are tied to retrieved evidence from paper/web/notes sources, with citations instead of unsupported claims.
 - **Testable orchestration:** the multi-agent workflow is covered by automated checks in CI (`ruff`, `pytest`, router smoke test), not only manual UI testing.
 
-It also includes LangSmith observability and quality-based fallback from Paper to Web Docs when paper retrieval is weak.”.
+It also includes LangSmith observability and quality-based fallback from Paper to Web Docs when paper retrieval is weak.
 
 ---
 
@@ -52,11 +52,10 @@ flowchart TD
     B -->|practical, general| D[Web Docs Agent]
     B -->|contextual| E[Notes Agent]
     B -->|comparative| PL[Planner]
-    PL --> F[Planned agents (parallel)]
+    PL --> F[Planned agents - parallel]
 
-    %% Quality-based fallback (implemented in router_graph.py)
-    C -->|if arxiv_results_count >= 1 and arxiv_quality >= 0.55| G[Response Synthesizer]
-    C -->|fallback: weak paper retrieval| D
+    C -->|paper strong| G[Response Synthesizer]
+    C -->|fallback weak paper retrieval| D
 
     D --> G
     E --> G
@@ -64,7 +63,7 @@ flowchart TD
 
     G --> H[Final answer + citations + route trace]
 
-    subgraph Data Sources
+    subgraph Data_Sources
         I[arXiv.org]
         J[Tavily / Web]
         K[Local notes]
@@ -74,11 +73,13 @@ flowchart TD
     D --> J
     E --> K
 
-    %% Optional observability view
-    O[(LangSmith tracing)]
-    P -. traces .-> O
-    B -. traces .-> O
-    G -. traces .-> O
+    classDef route fill:#eef4ff,stroke:#6b8cff,stroke-width:1px,color:#1f2a44;
+    classDef source fill:#eefaf1,stroke:#5ea86c,stroke-width:1px,color:#1f3b2a;
+    classDef output fill:#fff6e8,stroke:#d59b3d,stroke-width:1px,color:#4a3412;
+
+    class A,P,B,PL,F,C,D,E,G route;
+    class I,J,K source;
+    class H output;
 ```
 
 ## Key Features
