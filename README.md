@@ -47,16 +47,21 @@ A **results-based fallback** runs the Web Docs agent when the Paper agent has no
 flowchart TD
     A[User Query] --> P[Preprocessor]
     P --> B[Intent Router]
+
     B -->|academic| C[Paper Agent]
     B -->|practical, general| D[Web Docs Agent]
     B -->|contextual| E[Notes Agent]
     B -->|comparative| PL[Planner]
-    PL --> F[Planned agents]
+    PL --> F[Planned agents (parallel)]
 
-    C --> G[Evidence normalizer / Synthesizer]
+    %% Quality-based fallback (implemented in router_graph.py)
+    C -->|if arxiv_results_count >= 1 and arxiv_quality >= 0.55| G[Response Synthesizer]
+    C -->|fallback: weak paper retrieval| D
+
     D --> G
     E --> G
     F --> G
+
     G --> H[Final answer + citations + route trace]
 
     subgraph Data Sources
@@ -64,9 +69,16 @@ flowchart TD
         J[Tavily / Web]
         K[Local notes]
     end
+
     C --> I
     D --> J
     E --> K
+
+    %% Optional observability view
+    O[(LangSmith tracing)]
+    P -. traces .-> O
+    B -. traces .-> O
+    G -. traces .-> O
 ```
 ## Key Features
 
